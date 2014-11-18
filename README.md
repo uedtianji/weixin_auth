@@ -15,17 +15,20 @@
 <a name="usage"></a>
 ###使用方法  
 
->AuthAction.class.php ---- 认证基类  
->IndexAction.class.php --- 测试类  
->index/Conf/config.php --- 设置  
->> wx_appID						微信公众账号的appid  
->> wx_appsecret    				微信公众账号的appsecret  
->> weixin_token    				微信公众账号接口配置信息的Token  
->> wx_webauth_callback_url  	OAuth2.0授权后跳转到的默认页面   
->> wx_webauth_expire  			OAuth2.0授权Token过期时间默认6500  
+AuthAction.class.php ---- 认证基类  
+IndexAction.class.php --- 测试类  
+index/Conf/config.php --- 设置  
+> wx_appID						微信公众账号的appid  
+> wx_appsecret    				微信公众账号的appsecret  
+> weixin_token    				微信公众账号接口配置信息的Token  
+> wx_webauth_callback_url  	OAuth2.0授权后跳转到的默认页面   
+> wx_webauth_expire  			OAuth2.0授权Token过期时间默认6500   
 
-在AuthAction中的初始化函数```_initialize```中进行了OAuth2.0受权，所有基于AuthAction的控制器都将进行受权过程(除了微信API认证过程wechatInitAuth)。  
-对于同一用户在受权过期时间内多次打开此控制器的页面，将不会进行多次受权，因为其受权信息记录在session中，以免重复受权，减慢访问速度。受权过期时间在```index/Conf/config.php```中```wx_webauth_expire```设置，建议不要大于微信的过期时间7200秒。  
+配置好config.php后在微信公号后台设置```index.php/Index/wechatInitAuth```进行微信API认证，提示"配置成功"后方可使用。  
+_测试公众号申请与具体的测试步骤见下方。_  
+
+>在AuthAction中的初始化函数```_initialize```中进行了OAuth2.0受权，所有基于AuthAction的控制器都将进行受权过程(除了微信API认证过程wechatInitAuth)。  
+>对于同一用户在受权过期时间内多次打开此控制器的页面，将不会进行多次受权，因为其受权信息记录在session中，以免重复受权，减慢访问速度。受权过期时间在```index/Conf/config.php```中```wx_webauth_expire```设置，建议不要大于微信的过期时间7200秒。  
 
 ====================
 
@@ -37,7 +40,7 @@
 微信提供测试用的公众账号，此帐号只能添加100个关注者且只有__已关注__的用户才可以进行OAuth2.0受权。  
 [点此开通测试帐号](http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)  
 
-1.开通后将```appID```、```appsecret```、```Token```填入```index/Conf/config.php```中。然后将接口配置信息中的URL改至php服务器，将地址定位到```index.php/Index/wechatInitAuth```进行微信API认证，直到提示配置成功。  
+1.开通后将```appID```、```appsecret```、```Token```填入```index/Conf/config.php```中。然后将接口配置信息中的URL改至php服务器，将地址定位到```index.php/Index/wechatInitAuth```进行微信API认证，直到提示"配置成功"。  
 ![](https://raw.githubusercontent.com/uedtianji/weixin_auth/master/images/1.jpg)  
 2.点击‘体验接口权限表--OAuth2.0网页授权（仅关注者才能授权）’中的修改，将授权回调页面域名改为php服务器地址。直到出现‘通过安全监测’。  
 ![](https://raw.githubusercontent.com/uedtianji/weixin_auth/master/images/2.jpg)  
