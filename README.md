@@ -27,9 +27,6 @@ index/Conf/config.php --- 设置
 配置好config.php后在微信公号后台设置```index.php/Index/wechatInitAuth```进行微信API认证，提示"配置成功"后方可使用。  
 _测试公众号申请与具体的测试步骤见下方。_  
 
->在AuthAction中的初始化函数```_initialize```中进行了OAuth2.0受权，所有基于AuthAction的控制器都将进行受权过程(除了微信API认证过程wechatInitAuth)。  
->对于同一用户在受权过期时间内多次打开此控制器的页面，将不会进行多次受权，因为其受权信息记录在session中，以免重复受权，减慢访问速度。受权过期时间在```index/Conf/config.php```中```wx_webauth_expire```设置，建议不要大于微信的过期时间7200秒。  
-
 ====================
 
 ###测试  
@@ -46,4 +43,16 @@ _测试公众号申请与具体的测试步骤见下方。_
 ![](https://raw.githubusercontent.com/uedtianji/weixin_auth/master/images/2.jpg)  
 ![](https://raw.githubusercontent.com/uedtianji/weixin_auth/master/images/3.jpg)  
 
-配置完微信测试号后，在微信中打开```http://项目目录/index.php```（例：```http://121.40.135.90/weixin_auth/index.php```）将会在页面中打印出session中的受权数据，表示测试受权成功。
+配置完微信测试号后，在微信中打开```http://项目目录/index.php```（例：```http://121.40.135.90/weixin_auth/index.php```）将会在页面中打印出session中的受权数据，表示测试受权成功。  
+
+===================
+####代码结构  
+
+在AuthAction中的初始化函数```_initialize```中进行了OAuth2.0受权，所有基于AuthAction的控制器都将进行受权过程(除了微信API认证过程wechatInitAuth)。  
+对于同一用户在受权过期时间内多次打开此控制器的页面，将不会进行多次受权，因为其受权信息记录在session中，以免重复受权，减慢访问速度。受权过期时间在```index/Conf/config.php```中```wx_webauth_expire```设置，建议不要大于微信的过期时间7200秒。  
+注意：
+* 微信OAuth2.0受权分为snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）,AuthAction.class.php默认为snsapi_base，而且session中只记录了snsapi_base中的基础数据，如需要snsapi_userinfo请自行修改。
+* 具体的实现方法见代码注释。  
+
+更多教程请访问：[ued.sexy](http://ued.sexy)  
+微博[@UED天机](http://weibo.com/uedtianji)。  
