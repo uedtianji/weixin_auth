@@ -2,6 +2,7 @@
 ===========
 
 微信OAuth2.0网页授权接口的thinkphp实现版本，主要实现了oauth网页受权，以及部分其他接口。  
+[使用方法](#usage)
 
 ####为什么用OAuth2.0受权？  
 通过OAuth2.0受权的网页将会获取到打开者的微信信息，甚至包括微信昵称、头像等有用的数据，开发者们可以凭此设计出更多更丰富的页面应用，比如最近一直很火爆的红包类活动。除此之外还有个额外的好处，就是可以控制页面在非微信浏览器中无法打开，可以减少代码被人窥窃的风险。   
@@ -11,11 +12,17 @@
 2.然后用户转发此页面，在转发的连接中带有自己的标识参数。当好友点击分享后的连接的时候也会重复第1步的步骤，当php服务器发现从微信OAuth2.0受权返回的数据中的用户数据与标识参数对应的分享者的用户数据不一致的时候，则可以判断出有好友打开了分享页面，给用户增加一个红包。  
 
 ====================
-
+<a name="usage"></a>
 ###使用方法  
 
 >AuthAction.class.php ---- 认证基类  
 >IndexAction.class.php --- 测试类  
+>index/Conf/config.php --- 设置  
+>> wx_appID						微信公众账号的appid  
+>> wx_appsecret    				微信公众账号的appsecret  
+>> weixin_token    				微信公众账号接口配置信息的Token  
+>> wx_webauth_callback_url  	OAuth2.0授权后跳转到的默认页面   
+>> wx_webauth_expire  			OAuth2.0授权Token过期时间默认6500  
 
 在AuthAction中的初始化函数```_initialize```中进行了OAuth2.0受权，所有基于AuthAction的控制器都将进行受权过程(除了微信API认证过程wechatInitAuth)。  
 对于同一用户在受权过期时间内多次打开此控制器的页面，将不会进行多次受权，因为其受权信息记录在session中，以免重复受权，减慢访问速度。受权过期时间在```index/Conf/config.php```中```wx_webauth_expire```设置，建议不要大于微信的过期时间7200秒。  
@@ -36,4 +43,4 @@
 ![](https://raw.githubusercontent.com/uedtianji/weixin_auth/master/images/2.jpg)  
 ![](https://raw.githubusercontent.com/uedtianji/weixin_auth/master/images/3.jpg)  
 
-配置完微信测试号后，在微信中打开```http://项目目录/index.php```（例：http://121.40.135.90/weixin_auth/index.php）将会在页面中打印出session中的受权数据，表示测试受权成功。
+配置完微信测试号后，在微信中打开```http://项目目录/index.php```（例：```http://121.40.135.90/weixin_auth/index.php```）将会在页面中打印出session中的受权数据，表示测试受权成功。
